@@ -27,3 +27,18 @@ app.get('/api/notes', (req, res) => {
     });
 });
 
+app.post('/api/notes', (req, res) => {
+    const newNote = req.body;
+
+    fs.readFile(dbNotes, 'utf8', (err, data) => {
+        if (err) throw err;
+        const note = JSON.parse(data);
+        newNote.id = Date.now(); 
+        note.push(newNote);
+
+        fs.appendFile(dbNotes, JSON.stringify(note), (err) => {
+            if (err) throw err;
+            res.send('New note stored successfully');
+        });
+    });
+});
