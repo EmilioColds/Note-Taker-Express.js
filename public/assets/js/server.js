@@ -16,3 +16,14 @@ app.use(express.static('public'));
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
+
+const dbNotes = path.join(__dirname, 'db.json');
+
+// Created the promise to get all the notes
+app.get('/api/notes', (req, res) => {
+    fs.readFile(dbNotes, 'utf8', (err, data) => {
+        if (err) throw err;
+        res.send(JSON.parse(data));
+    });
+});
+
