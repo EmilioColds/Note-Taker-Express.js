@@ -5,12 +5,16 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
 
 // Declared the middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 //Created the route for the notes page
 app.get('/notes', (req, res) => {
@@ -37,7 +41,7 @@ app.post('/api/notes', (req, res) => {
         newNote.id = Date.now(); 
         note.push(newNote);
         // Used append instead of write to store multiple notes
-        fs.appendFile(dbNotes, JSON.stringify(note), (err) => {
+        fs.writeFile(dbNotes, JSON.stringify(note), (err) => {
             if (err) throw err;
             res.send('New note posted successfully');
         });
@@ -53,7 +57,7 @@ app.delete('/api/notes', (req, res) => {
         let note = JSON.parse(data);
         note = note.filter(note => note.id !== idNote);
 
-        fs.appendFile(dbNotes, JSON.stringify(note), (err) => {
+        fs.writeFile(dbNotes, JSON.stringify(note), (err) => {
             if (err) throw err;
             res.send('New note deleted successfully');
         });
