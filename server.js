@@ -49,17 +49,17 @@ app.post('/api/notes', (req, res) => {
 });
 
 // Created the promise to delete the notes
-app.delete('/api/notes', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
     const idNote = parseInt(req.params.id);
 
     fs.readFile(dbNotes, 'utf8', (err, data) => {
         if(err) throw err;
-        let note = JSON.parse(data);
-        note = note.filter(note => note.id !== idNote);
+        let notes = JSON.parse(data);
+        notes = notes.filter(notes => notes.id !== idNote);
 
-        fs.writeFile(dbNotes, JSON.stringify(note), (err) => {
+        fs.writeFile(dbNotes, JSON.stringify(notes), (err) => {
             if (err) throw err;
-            res.send('New note deleted successfully');
+            res.send('Note deleted successfully');
         });
     });
 });
